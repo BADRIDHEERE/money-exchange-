@@ -1,0 +1,35 @@
+-- 1. Users Table: Handles authentication and profile info
+CREATE TABLE users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    email TEXT UNIQUE NOT NULL,
+    password_hash TEXT NOT NULL,
+    created_at TEXT DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 2. Wallets Table: Tracks multi-currency balances for each user
+CREATE TABLE wallets (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    currency TEXT NOT NULL, -- e.g., 'USD', 'EUR', 'MYR'
+    balance REAL DEFAULT 0.00,
+    updated_at TEXT DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    UNIQUE(user_id, currency) -- Prevents duplicate wallets for same currency
+);
+
+-- 3. Transactions Table: Logs all financial movements
+CREATE TABLE transactions (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    sender_id INTEGER NOT NULL,
+    recipient_id INTEGER NOT NULL,
+    source_currency TEXT NOT NULL,
+    target_currency TEXT NOT NULL,
+    source_amount REAL NOT NULL,
+    target_amount REAL NOT NULL,
+    exchange_rate REAL NOT NULL,
+    status TEXT NOT NULL CHECK (status IN ('pending', 'completed', 'failed')) DEFAULT 'completed',
+    created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (sender_id) REFERENCES users(id),
+    FOREIGN KEY (recipient_id) REFERENCES users(id)
+);
