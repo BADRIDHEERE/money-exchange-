@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wise Clone - Money Transfer</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="transfer-container">
+        <h2>Wise Clone Calculator</h2>
+        <p class="subtitle">Moving money across borders, instantly.</p>
+
+        <div class="currency-box">
+            <label>You send</label>
+            <div class="input-group">
+                <input type="number" id="send-amount" value="1000">
+                <select id="source-currency">
+                    <option value="USD">USD</option>
+                    <option value="EUR">EUR</option>
+                    <option value="GBP">GBP</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="rate-info">
+            <div class="rate-line"></div>
+            <div class="rate-text">Live Rate: <span id="current-rate">1 USD = 4.50 MYR</span></div>
+        </div>
+
+        <div class="currency-box">
+            <label>Recipient gets</label>
+            <div class="input-group">
+                <input type="number" id="receive-amount" readonly>
+                <select id="target-currency">
+                    <option value="MYR">MYR</option>
+                    <option value="EUR">EUR</option>
+                    <option value="USD">USD</option>
+                </select>
+            </div>
+        </div>
+
+        <button class="btn-send" id="send-btn">Get started</button>
+    </div>
+
+    <script>
+        // Simple JavaScript logic to handle the live calculation
+        const sendInput = document.getElementById('send-amount');
+        const receiveInput = document.getElementById('receive-amount');
+        const rateText = document.getElementById('current-rate');
+        
+        const mockRate = 4.50; // Hardcoded exchange rate for our MVP
+
+        function calculate() {
+            const amount = parseFloat(sendInput.value) || 0;
+            receiveInput.value = (amount * mockRate).toFixed(2);
+        }
+
+        // Run calculation when user types
+        sendInput.addEventListener('input', calculate);
+        
+        // Run once on load
+        calculate();
+
+        // Button Click Alert
+        document.getElementById('send-btn').addEventListener('click', () => {
+            alert(`Processing your transfer of ${sendInput.value} USD!`);
+        });
+    </script>
+</body>
+</html>
